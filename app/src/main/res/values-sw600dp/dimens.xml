@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="category_card_height">82dp</dimen>
+    <dimen name="category_card_text_drawable_padding">16dp</dimen>
+</resources>
