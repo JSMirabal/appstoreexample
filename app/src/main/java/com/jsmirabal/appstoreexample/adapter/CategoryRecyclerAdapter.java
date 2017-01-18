@@ -16,6 +16,7 @@ import com.jsmirabal.appstoreexample.R;
 import com.jsmirabal.appstoreexample.data.AppListData;
 import com.jsmirabal.appstoreexample.fragment.CategoryFragment;
 import com.jsmirabal.appstoreexample.utility.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,9 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         if (categoryList != null) {
             String category = categoryList.get(position);
             holder.mCategoryLabel.setText(category);
-            holder.mCategoryIcon.setImageResource(Util.getCategoryIconRes(category));
+            Picasso.with(mFragment.getContext())
+                    .load(Util.getCategoryIconRes(category))
+                    .into(holder.mCategoryIcon);
             holder.mCard.setCardBackgroundColor(mFragment.getResources()
                     .getColor(Util.getCategoryColor(category)));
             runEnterAnimation(holder.itemView, position);
