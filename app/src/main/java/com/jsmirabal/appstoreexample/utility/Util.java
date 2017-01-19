@@ -40,6 +40,9 @@ public class Util {
         resMap.put("Photo & Video", R.drawable.ic_photo_video);
         resMap.put("Games", R.drawable.ic_games);
         resMap.put("Utilities", R.drawable.ic_utility);
+        resMap.put("News", R.drawable.ic_newspaper);
+        resMap.put("Education", R.drawable.ic_education);
+        resMap.put("Health & Fitness", R.drawable.ic_fitness);
 
         return resMap.get(category) == null ? R.drawable.ic_no_icon : resMap.get(category);
     }
@@ -56,8 +59,33 @@ public class Util {
         resMap.put("Photo & Video", R.color.green500);
         resMap.put("Games", R.color.grey500);
         resMap.put("Utilities", R.color.indigo500);
+        resMap.put("News", R.color.lime500);
+        resMap.put("Education", R.color.lightBlue500);
+        resMap.put("Health & Fitness", R.color.lightGreen500);
 
         return resMap.get(category) == null ? R.color.teal500 : resMap.get(category);
     }
 
+    public static int getColorDark(int colorRes){
+        Map<Integer, Integer> resMap = new HashMap<>();
+        resMap.put(R.color.amber500, R.color.amber700);
+        resMap.put(R.color.blue500, R.color.blue700);
+        resMap.put(R.color.blueGrey500, R.color.blueGrey700);
+        resMap.put(R.color.brown500, R.color.brown700);
+        resMap.put(R.color.cyan500, R.color.cyan700);
+        resMap.put(R.color.deepOrange500, R.color.deepOrange700);
+        resMap.put(R.color.deepPurple500, R.color.deepPurple700);
+        resMap.put(R.color.green500, R.color.green700);
+        resMap.put(R.color.grey500, R.color.grey700);
+        resMap.put(R.color.indigo500, R.color.indigo700);
+        resMap.put(R.color.lime500, R.color.lime700);
+        resMap.put(R.color.lightBlue500, R.color.lightBlue700);
+        resMap.put(R.color.lightGreen500, R.color.lightGreen700);
+
+        return resMap.get(colorRes) == null ? R.color.teal700 : resMap.get(colorRes);
+    }
+
+    public static String formatPrice(String price) {
+        return price.equals("0.0") ? "FREE" : price+" USD";
+    }
 }

@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/fragment_main_margin"
     tools:context=".activity.MainActivity_">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/category_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" android:padding="12dp"/>
 
     <include
         android:id="@+id/error_layout"

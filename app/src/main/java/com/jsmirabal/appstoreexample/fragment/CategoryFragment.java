@@ -3,6 +3,8 @@ package com.jsmirabal.appstoreexample.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,14 +33,15 @@ import java.net.UnknownHostException;
  */
 
 @EFragment(R.layout.fragment_category)
-public class CategoryFragment extends Fragment implements ViewOpsToPresenter{
+public class CategoryFragment extends Fragment implements ViewOpsToPresenter {
 
     private MainActivity mActivity;
     private Context mContext;
+    private Bundle mData;
     private CategoryRecyclerAdapter mAdapter;
     private MainPresenter mPresenter;
-    private static final  String LOG_TAG = CategoryFragment.class.getSimpleName();
-    private static final  String URL = "https://itunes.apple.com/us/rss/topfreeapplications/limit=20/json";
+    private static final String LOG_TAG = CategoryFragment.class.getSimpleName();
+    private static final String URL = "https://itunes.apple.com/us/rss/topfreeapplications/limit=40/json";
 
     @ViewById(R.id.category_recycler_view)
     RecyclerView mCategoryRecyclerView;
@@ -50,14 +53,14 @@ public class CategoryFragment extends Fragment implements ViewOpsToPresenter{
     Button mRetryButton;
 
     @Click(R.id.retry_error_button)
-    void retryRequest(){
+    void retryRequest() {
         mErrorLayout.setVisibility(View.INVISIBLE);
         requestDataFromServer();
     }
 
     @AfterViews
     void init() {
-        setMemberVariables();
+        initMemberVars();
         configRecyclerView();
         requestDataFromServer();
     }
@@ -67,7 +70,7 @@ public class CategoryFragment extends Fragment implements ViewOpsToPresenter{
         mPresenter.requestDataFromServer(URL);
     }
 
-    private void setMemberVariables() {
+    private void initMemberVars() {
         mContext = getActivity();
         mActivity = (MainActivity) mContext;
         mPresenter = new MainPresenter(mContext, this);
@@ -88,15 +91,30 @@ public class CategoryFragment extends Fragment implements ViewOpsToPresenter{
     public void onRequestDataSuccess(Bundle data) {
         mAdapter = new CategoryRecyclerAdapter(data, this);
         mCategoryRecyclerView.setAdapter(mAdapter);
+        mData = data;
     }
 
     @UiThread
     @Override
     public void onRequestDataError(Throwable e) {
         e.printStackTrace();
-        if (e instanceof UnknownHostException){
+        if (e instanceof UnknownHostException) {
             mErrorLayout.setVisibility(View.VISIBLE);
         }
         Log.e(LOG_TAG, e.getMessage());
+    }
+
+    public void onCategoryItemClick(View view) {
+        String category = view.getTag().toString();
+        Log.d(LOG_TAG, "Item clicked: " + category);
+        Fragment fragment = AppListFragment_.builder().build();
+        fragment.setArguments(mData);
+        FragmentManager manager = mActivity.getSupportFragmentManager();
+        manager.beginTransaction()
+                .hide(manager.findFragmentById(R.id.fragment_category))
+                .add(R.id.activity_main, fragment, category)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .addToBackStack(null)
+                .commit();
     }
 }

@@ -3,6 +3,7 @@ package com.jsmirabal.appstoreexample.adapter;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,9 +54,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             Picasso.with(mFragment.getContext())
                     .load(Util.getCategoryIconRes(category))
                     .into(holder.mCategoryIcon);
-            holder.mCard.setCardBackgroundColor(mFragment.getResources()
-                    .getColor(Util.getCategoryColor(category)));
+            holder.mCard.setCardBackgroundColor(ContextCompat.getColor(
+                    mFragment.getContext(),Util.getCategoryColor(category)));
             runEnterAnimation(holder.itemView, position);
+            holder.mCard.setTag(category);
+            holder.mCard.setOnClickListener(view -> mFragment.onCategoryItemClick(view));
         }
     }
 
