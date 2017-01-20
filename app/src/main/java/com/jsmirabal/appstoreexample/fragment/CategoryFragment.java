@@ -109,12 +109,14 @@ public class CategoryFragment extends Fragment implements ViewOpsToPresenter {
         Log.d(LOG_TAG, "Item clicked: " + category);
         Fragment fragment = AppListFragment_.builder().build();
         fragment.setArguments(mData);
+
         FragmentManager manager = mActivity.getSupportFragmentManager();
         manager.beginTransaction()
                 .hide(manager.findFragmentById(R.id.fragment_category))
                 .add(R.id.activity_main, fragment, category)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                .addToBackStack(null)
+                .addToBackStack("a")
                 .commit();
+
     }
 }

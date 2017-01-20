@@ -23,8 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:transitionName="app_icon"
         android:layout_weight="5"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:targetApi="lollipop" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,9 +39,9 @@
             android:id="@+id/app_list_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="sans-serif"
             android:text="Apple Store"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/black" />
 
         <TextView
@@ -47,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:text="Apple Inc."
             android:textColor="@color/grey700" />
     </LinearLayout>
@@ -73,7 +76,8 @@
             android:layout_gravity="right"
             android:layout_marginRight="10dp"
             android:layout_marginTop="6dp"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="sans-serif"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:text="FREE"
             android:textColor="@color/teal500" />
     </LinearLayout>

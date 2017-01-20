@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DetailActivity_">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- Color panel (which may contain images) ........................................ -->
+            <ImageView
+                android:id="@+id/detail_panel_view"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:visibility="gone"
+                app:srcCompat="@color/teal500" />
+
+            <!-- App icon, name, etc ........................................................... -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/teal500"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:id="@+id/app_list_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="10"
+                    android:transitionName="app_icon"
+                    app:srcCompat="@mipmap/ic_launcher"
+                    tools:targetApi="lollipop" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/app_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="Apple Store"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/app_author"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Apple Inc."
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/grey100" />
+
+                    <TextView
+                        android:id="@+id/app_release_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="October, 2016"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/grey100" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Summary layout with buttons ................................................... -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/app_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="left"
+                    android:maxLines="4"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Lorem ipsu dolor sinamet"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey700" />
+
+                <ImageButton
+                    android:id="@+id/app_summary_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/app_summary"
+                    android:background="@color/grey100"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_expand_more_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/app_summary_less"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/app_summary"
+                    android:background="@color/grey100"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_expand_less_black_24dp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:allowUndo="true"
+                android:fontFamily="sans-serif-condensed"
+                android:paddingLeft="16dp"
+                android:text="Similar apps"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/similar_app_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+
+            <TextView
+                android:id="@+id/app_copyright"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Copyright"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/app_install"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="true"
+        android:tint="@color/white"
+        app:backgroundTint="@android:color/holo_red_light"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_file_download_black_24dp" />
+</android.support.design.widget.CoordinatorLayout>

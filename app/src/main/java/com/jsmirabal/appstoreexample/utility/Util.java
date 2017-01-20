@@ -6,17 +6,26 @@ package com.jsmirabal.appstoreexample.utility;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
 import com.jsmirabal.appstoreexample.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import static com.jsmirabal.appstoreexample.data.AppListData.IMAGE_PATH_PARAM;
+import static com.jsmirabal.appstoreexample.data.AppListData.NAME_PARAM;
+import static com.jsmirabal.appstoreexample.data.AppListData.PRICE_PARAM;
 
 public class Util {
 
-    public static boolean isTablet (Context context) {
+    public static boolean isTablet(Context context) {
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
@@ -28,7 +37,7 @@ public class Util {
         return diagonalInches >= 7.0;
     }
 
-    public static int getCategoryIconRes(String category){
+    public static int getCategoryIconRes(String category) {
         Map<String, Integer> resMap = new HashMap<>();
         resMap.put("Shopping", R.drawable.ic_shopping);
         resMap.put("Navigation", R.drawable.ic_navigation);
@@ -47,7 +56,7 @@ public class Util {
         return resMap.get(category) == null ? R.drawable.ic_no_icon : resMap.get(category);
     }
 
-    public static int getCategoryColor(String category){
+    public static int getCategoryColor(String category) {
         Map<String, Integer> resMap = new HashMap<>();
         resMap.put("Shopping", R.color.amber500);
         resMap.put("Navigation", R.color.blue500);
@@ -66,7 +75,7 @@ public class Util {
         return resMap.get(category) == null ? R.color.teal500 : resMap.get(category);
     }
 
-    public static int getColorDark(int colorRes){
+    public static int getColorDark(int colorRes) {
         Map<Integer, Integer> resMap = new HashMap<>();
         resMap.put(R.color.amber500, R.color.amber700);
         resMap.put(R.color.blue500, R.color.blue700);
@@ -86,6 +95,31 @@ public class Util {
     }
 
     public static String formatPrice(String price) {
-        return price.equals("0.0") ? "FREE" : price+" USD";
+        return price.equals("0.0") ? "FREE" : price + " USD";
+    }
+
+    public static String formatDate(String strDate) {
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH).parse(strDate);
+            return capitalize(new SimpleDateFormat("MMMM, yyyy", Locale.getDefault()).format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return strDate;
+    }
+
+    public static String capitalize(String text) {
+        return !text.isEmpty() ? text.substring(0, 1).toUpperCase() + text.substring(1) : text;
+    }
+
+    public static String getFieldValue(Bundle data, String field, String category, int position) {
+        return data.getBundle(field).getStringArrayList(category).get(position);
+    }
+
+    public static Bundle getSimilarAppData(Bundle data, String category, int position) {
+        data.getBundle(NAME_PARAM).getStringArrayList(category).remove(position);
+        data.getBundle(PRICE_PARAM).getStringArrayList(category).remove(position);
+        data.getBundle(IMAGE_PATH_PARAM).getStringArrayList(category).remove(position);
+        return data;
     }
 }

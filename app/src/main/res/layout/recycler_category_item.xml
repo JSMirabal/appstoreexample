@@ -9,8 +9,8 @@
         android:id="@+id/category_card"
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_card_height"
-        android:layout_margin="@dimen/category_item_margin"
         android:clickable="true"
+        app:cardUseCompatPadding="true"
         android:foreground="?android:attr/selectableItemBackground"
         >
 

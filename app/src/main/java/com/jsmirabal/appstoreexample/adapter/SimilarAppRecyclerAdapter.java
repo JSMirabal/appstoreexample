@@ -21,53 +21,50 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jsmirabal.appstoreexample.R;
-import com.jsmirabal.appstoreexample.fragment.AppListFragment;
+import com.jsmirabal.appstoreexample.fragment.DetailFragment;
 import com.jsmirabal.appstoreexample.utility.Util;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import static com.jsmirabal.appstoreexample.data.AppListData.AUTHOR_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.IMAGE_PATH_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.NAME_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.PRICE_PARAM;
 
-public class AppListRecyclerAdapter extends RecyclerView.Adapter<AppListRecyclerAdapter.ViewHolder> {
+public class SimilarAppRecyclerAdapter extends RecyclerView.Adapter<SimilarAppRecyclerAdapter.ViewHolder> {
 
     private Bundle mData;
     private String mCategory;
-    private AppListFragment mFragment;
+    private DetailFragment mFragment;
     private int lastAnimatedPosition = -1;
     private boolean animationsLocked = false;
     private boolean delayEnterAnimation = true;
 
-    public AppListRecyclerAdapter(Bundle data, AppListFragment fragment) {
+    public SimilarAppRecyclerAdapter(Bundle data, DetailFragment fragment, String category) {
         mData = data;
         mFragment = fragment;
-        mCategory = fragment.getTag();
+        mCategory = category;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AppListRecyclerAdapter.ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_app_list_item, parent, false));
+        return new SimilarAppRecyclerAdapter.ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recycler_similar_app_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String name = mData.getBundle(NAME_PARAM).getStringArrayList(mCategory).get(position);
-        String author = mData.getBundle(AUTHOR_PARAM).getStringArrayList(mCategory).get(position);
         String price = mData.getBundle(PRICE_PARAM).getStringArrayList(mCategory).get(position);
         String iconPath = mData.getBundle(IMAGE_PATH_PARAM).getStringArrayList(mCategory).get(position);
 
-        holder.mAppCounter.setText(Integer.toString(position + 1));
         holder.mAppName.setText(name);
-        holder.mAppAuthor.setText(author);
         holder.mAppPrice.setText(Util.formatPrice(price));
-        Picasso.with(mFragment.getContext()).load(iconPath).into(holder.mAppIcon, new Callback(){
+        Picasso.with(mFragment.getContext()).load(iconPath).into(holder.mAppIcon, new Callback() {
 
             @Override
             public void onSuccess() {
             }
+
             @Override
             public void onError() {
                 holder.mAppIcon.setImageResource(R.drawable.ic_no_icon);
@@ -76,7 +73,8 @@ public class AppListRecyclerAdapter extends RecyclerView.Adapter<AppListRecycler
 
         runEnterAnimation(holder.itemView, position);
 
-        holder.itemView.setOnClickListener(view -> mFragment.onAppListItemClick(view,position));
+        holder.itemView.setOnClickListener(view -> mFragment.onSimilarAppItemClick(
+                holder.mAppIcon, mData, position));
     }
 
     @Override
@@ -106,26 +104,25 @@ public class AppListRecyclerAdapter extends RecyclerView.Adapter<AppListRecycler
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
-        TextView mAppCounter, mAppPrice, mAppName, mAppAuthor;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView mAppPrice, mAppName;
         ImageView mAppIcon;
         ImageButton mMenu;
         Context mContext;
+
         ViewHolder(View itemView) {
             super(itemView);
             mContext = itemView.getContext();
-            mAppCounter = (TextView) itemView.findViewById(R.id.app_list_counter);
             mAppName = (TextView) itemView.findViewById(R.id.app_list_name);
-            mAppAuthor = (TextView) itemView.findViewById(R.id.app_list_author);
             mAppPrice = (TextView) itemView.findViewById(R.id.app_list_price);
             mAppIcon = (ImageView) itemView.findViewById(R.id.app_list_icon);
             mMenu = (ImageButton) itemView.findViewById(R.id.app_list_menu);
 
-            mMenu.setOnClickListener(view ->{
+            mMenu.setOnClickListener(view -> {
                 PopupMenu popup = new PopupMenu(mContext, view);
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.app_list_item_menu, popup.getMenu()); // Create popup menu
-                popup.setOnMenuItemClickListener(menuItem ->{
+                popup.setOnMenuItemClickListener(menuItem -> {
                     switch (menuItem.getItemId()) {
                         case R.id.app_list_item_action_install:
                             Toast.makeText(mContext, "Installing...", Toast.LENGTH_SHORT).show();
@@ -133,7 +130,8 @@ public class AppListRecyclerAdapter extends RecyclerView.Adapter<AppListRecycler
                         case R.id.app_list_item_action_wishlist:
                             Toast.makeText(mContext, "Added to wishlist", Toast.LENGTH_SHORT).show();
                             return true;
-                        default: return false;
+                        default:
+                            return false;
                     }
                 });
                 popup.show();

@@ -10,11 +10,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
+/*
+ * Copyright (c) 2017. JSMirabal
+ */
 public class AppListData {
 
     private Bundle idBundle;
     private Bundle nameBundle;
+    private Bundle authorBundle;
     private Bundle imagePathBundle;
     private Bundle summaryBundle;
     private Bundle priceBundle;
@@ -25,6 +28,7 @@ public class AppListData {
 
     public static final String ID_PARAM = "im:id";
     public static final String NAME_PARAM = "im:name";
+    public static final String AUTHOR_PARAM = "im:artist";
     public static final String IMAGE_PATH_PARAM = "im:image";
     public static final String CATEGORY_PARAM = "category";
     public static final String SUMMARY_PARAM = "summary";
@@ -33,7 +37,7 @@ public class AppListData {
     public static final String RELEASE_DATE_PARAM = "im:releaseDate";
     public static final String GENERIC_LABEL_PARAM = "label";
     public static final String GENERIC_ATTRIBUTES_PARAM = "attributes";
-    public static final String SELECTED_CATEGORY = "selected_category";
+
     private static final int IMAGE_53P = 0;
     private static final int IMAGE_75P = 1;
     private static final int IMAGE_100P = 2;
@@ -47,6 +51,7 @@ public class AppListData {
 
         fillCategoryList(entry);
         fillNameList(entry);
+        fillAuthorList(entry);
         fillIdList(entry);
         fillImagePathList(entry);
         fillSummaryList(entry);
@@ -60,6 +65,7 @@ public class AppListData {
     private void initVars() {
         idBundle = new Bundle();
         nameBundle = new Bundle();
+        authorBundle = new Bundle();
         imagePathBundle = new Bundle();
         categoryList = new ArrayList<>();
         summaryBundle = new Bundle();
@@ -117,6 +123,27 @@ public class AppListData {
             }// for j
             // Add the name list of the respective category
             nameBundle.putStringArrayList(categorySaved, nameList);
+        }// foreach
+    }// method
+
+    private void fillAuthorList(JSONArray entry) throws JSONException {
+        String category, author;
+        ArrayList<String> authorList;
+        // For each filtered category
+        for (String categorySaved : categoryList) {
+            authorList = new ArrayList<>();
+            for (int j = 0; j < entry.length(); j++) {
+                category = getCategoryFromJson(entry, j);
+                author = entry.getJSONObject(j)
+                        .getJSONObject(AUTHOR_PARAM)
+                        .getString(GENERIC_LABEL_PARAM);
+                // If we are in the same category
+                if (categorySaved.equals(category)){
+                    authorList.add(author); // Add a author to the list
+                }
+            }// for j
+            // Add the author list of the respective category
+            authorBundle.putStringArrayList(categorySaved, authorList);
         }// foreach
     }// method
 
@@ -216,7 +243,7 @@ public class AppListData {
                 category = getCategoryFromJson(entry, j);
                 releaseDate = entry.getJSONObject(j)
                         .getJSONObject(RELEASE_DATE_PARAM)
-                        .getString(GENERIC_LABEL_PARAM);
+                        .getString(GENERIC_LABEL_PARAM).substring(0, 7);
                 // If we are in the same category
                 if (categorySaved.equals(category)){
                     releaseDateList.add(releaseDate); // Add a releaseDate to the list
@@ -230,6 +257,7 @@ public class AppListData {
     private void fillAppDataBundle(){
         appDataBundle.putStringArrayList(CATEGORY_PARAM, categoryList);
         appDataBundle.putBundle(NAME_PARAM, nameBundle);
+        appDataBundle.putBundle(AUTHOR_PARAM, authorBundle);
         appDataBundle.putBundle(ID_PARAM, idBundle);
         appDataBundle.putBundle(IMAGE_PATH_PARAM, imagePathBundle);
         appDataBundle.putBundle(SUMMARY_PARAM, summaryBundle);

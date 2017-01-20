@@ -2,18 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_detail"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/fragment_category"
-        android:name="com.jsmirabal.appstoreexample.fragment.CategoryFragment_"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/fragment_detail"
+        android:name="com.jsmirabal.appstoreexample.fragment.DetailFragment_"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".activity.MainActivity_"
-        tools:layout="@layout/fragment_category"
+        tools:context=".activity.DetailActivity__"
+        tools:layout="@layout/fragment_detail"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 

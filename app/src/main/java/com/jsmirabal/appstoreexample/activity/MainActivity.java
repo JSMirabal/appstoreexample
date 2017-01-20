@@ -17,8 +17,6 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.jsmirabal.appstoreexample.R;
-import com.jsmirabal.appstoreexample.fragment.AppListFragment;
-import com.jsmirabal.appstoreexample.fragment.CategoryFragment;
 import com.jsmirabal.appstoreexample.utility.Util;
 
 import org.androidannotations.annotations.EActivity;
@@ -26,8 +24,6 @@ import org.androidannotations.annotations.EActivity;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private CategoryFragment mCategoryFragment;
-    private AppListFragment mAppListFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
-            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
-            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
