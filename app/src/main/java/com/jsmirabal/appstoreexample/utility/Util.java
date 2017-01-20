@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.jsmirabal.appstoreexample.data.AppListData.IMAGE_PATH_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.NAME_PARAM;
+import static com.jsmirabal.appstoreexample.data.AppListData.PRICE_PARAM;
 
 public class Util {
 
@@ -115,9 +117,9 @@ public class Util {
     }
 
     public static Bundle getSimilarAppData(Bundle data, String category, int position) {
-        ((Bundle)data.getParcelable("data")).getBundle(NAME_PARAM).getStringArrayList(category).remove(position);
-//        data.getBundle(PRICE_PARAM).getStringArrayList(category).remove(position);
-//        data.getBundle(IMAGE_PATH_PARAM).getStringArrayList(category).remove(position);
+        data.getBundle(NAME_PARAM).getStringArrayList(category).remove(position);
+        data.getBundle(PRICE_PARAM).getStringArrayList(category).remove(position);
+        data.getBundle(IMAGE_PATH_PARAM).getStringArrayList(category).remove(position);
         return data;
     }
 }
