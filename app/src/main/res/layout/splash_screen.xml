@@ -17,7 +17,7 @@
         android:layout_marginTop="50dp"
         android:text="App Store"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-        android:textColor="@color/pink100"
+        android:textColor="@color/blueGrey700"
         android:visibility="invisible" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_centerHorizontal="true"
         android:text="Top Free Apps"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@color/white"
+        android:textColor="@color/grey500"
         android:visibility="invisible" />
 
 </RelativeLayout>

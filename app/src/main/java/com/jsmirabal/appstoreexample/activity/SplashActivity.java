@@ -2,12 +2,14 @@ package com.jsmirabal.appstoreexample.activity;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.jsmirabal.appstoreexample.R;
+import com.jsmirabal.appstoreexample.utility.Util;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -22,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @AfterViews
     void init() {
+        changeTabletOrientation();
         initMainActivity();
     }
 
@@ -78,5 +81,13 @@ public class SplashActivity extends AppCompatActivity {
                 .setInterpolator(new DecelerateInterpolator(2.f))
                 .setDuration(1000)
                 .start();
+    }
+
+    private void changeTabletOrientation() {
+        if (Util.isTablet(this)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 }

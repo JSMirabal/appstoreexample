@@ -40,10 +40,10 @@ public class AppListRecyclerAdapter extends RecyclerView.Adapter<AppListRecycler
     private boolean animationsLocked = false;
     private boolean delayEnterAnimation = true;
 
-    public AppListRecyclerAdapter(Bundle data, AppListFragment fragment) {
+    public AppListRecyclerAdapter(Bundle data, AppListFragment fragment, String category) {
         mData = data;
         mFragment = fragment;
-        mCategory = fragment.getTag();
+        mCategory = category;
     }
 
     @Override

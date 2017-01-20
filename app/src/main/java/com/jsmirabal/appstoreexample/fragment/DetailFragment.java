@@ -31,6 +31,8 @@ import static com.jsmirabal.appstoreexample.data.AppListData.IMAGE_PATH_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.NAME_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.RELEASE_DATE_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.SUMMARY_PARAM;
+import static com.jsmirabal.appstoreexample.fragment.AppListFragment.APP_DATA;
+import static com.jsmirabal.appstoreexample.fragment.AppListFragment.APP_DATA_POSITION;
 
 /**
  * Created by Julio on 19/1/2017.
@@ -42,7 +44,7 @@ public class DetailFragment extends Fragment {
     private DetailActivity mActivity;
     private Context mContext;
     private Bundle mData;
-    private int mPosition, mLastPosition;
+    private int mPosition, lastPosition;
     private String mCategory;
 
     @ViewById(R.id.detail_panel_view)
@@ -70,7 +72,6 @@ public class DetailFragment extends Fragment {
     @ViewById(R.id.similar_app_recycler_view)
     RecyclerView mRecycler;
 
-
     @AfterViews
     void init() {
         initMemberVars();
@@ -81,13 +82,14 @@ public class DetailFragment extends Fragment {
         mContext = getActivity();
         mActivity = (DetailActivity) mContext;
 
-        if (getTag() == null) {
-            mPosition = mActivity.getIntent().getExtras().getInt(AppListFragment.APP_DATA_POSITION);
-            mData = mActivity.getIntent().getExtras().getBundle(AppListFragment.APP_DATA);
+        if (getTag() == null || getArguments() == null) {
+            mPosition = mActivity.getIntent().getExtras().getInt(APP_DATA_POSITION);
+            mData = mActivity.getIntent().getExtras().getBundle(APP_DATA);
         } else {
-            mPosition = Integer.parseInt(getTag());
-            mData = getArguments();
+            mPosition = getArguments().getInt(APP_DATA_POSITION);
+            mData = getArguments().getBundle(APP_DATA);
         }
+
         mCategory = mActivity.getIntent().getExtras().getString(AppListFragment.APP_DATA_CATEGORY);
     }
 
@@ -119,27 +121,40 @@ public class DetailFragment extends Fragment {
 
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         mRecycler.getLayoutManager().offsetChildrenHorizontal(10);
-        SimilarAppRecyclerAdapter adapter = new SimilarAppRecyclerAdapter(
-                Util.getSimilarAppData(mData, mCategory, mPosition), this, mCategory);
+        SimilarAppRecyclerAdapter adapter;
+        if (!Util.isTablet(mContext)) {
+            adapter = new SimilarAppRecyclerAdapter(
+                    Util.getSimilarAppData(mData, mCategory, mPosition), this, mCategory);
+        } else {
+            adapter = new SimilarAppRecyclerAdapter(mData, this, mCategory);
+        }
         mRecycler.setAdapter(adapter);
     }
 
     public void onSimilarAppItemClick(ImageView view, Bundle data, int position) {
         Fragment fragment = DetailFragment_.builder().build();
-        fragment.setArguments(data);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fragment.setSharedElementEnterTransition(new Fade(Fade.IN).setDuration(1000));
-            fragment.setSharedElementReturnTransition(new Fade(Fade.IN).setDuration(1000));
-            fragment.setEnterTransition(new Slide());
-
+        Bundle args = new Bundle();
+        if (!Util.isTablet(mContext)) { // if phone
+            args.putBundle(APP_DATA, mData);
+            args.putInt(APP_DATA_POSITION, position);
+            fragment.setArguments(args);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                fragment.setSharedElementEnterTransition(new Fade(Fade.IN).setDuration(1000));
+                fragment.setSharedElementReturnTransition(new Fade(Fade.IN).setDuration(1000));
+                fragment.setEnterTransition(new Slide());
+            }
+            FragmentManager manager = mActivity.getSupportFragmentManager();
+            manager.beginTransaction()
+                    .hide(this)
+                    .add(R.id.activity_detail, fragment, Integer.toString(position))
+                    .addSharedElement(view, "app_icon")
+                    .addToBackStack(Integer.toString(position))
+                    .commit();
+        } else { // if tablet
+            FragmentManager manager = mActivity.getSupportFragmentManager();
+            AppListFragment appListFragment = (AppListFragment) manager
+                    .findFragmentById(R.id.app_list_fragment);
+            appListFragment.onAppListItemClick(view, position);
         }
-        FragmentManager manager = mActivity.getSupportFragmentManager();
-        manager.beginTransaction()
-                .hide(this)
-                .add(R.id.activity_detail, fragment, Integer.toString(position))
-                .addSharedElement(view, "app_icon")
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(Integer.toString(position))
-                .commit();
     }
 }

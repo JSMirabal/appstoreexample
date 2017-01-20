@@ -29,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         changeTabletOrientation();
-        getSupportActionBar().setIcon(ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        setupActionBar();
     }
 
     private void changeTabletOrientation() {
@@ -54,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
+    }
+
+    private void setupActionBar(){
+        getSupportActionBar().setIcon(ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

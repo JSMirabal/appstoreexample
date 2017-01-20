@@ -1,11 +1,12 @@
 package com.jsmirabal.appstoreexample.activity;
 
-import android.content.Intent;
-import android.support.v4.app.NavUtils;
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.jsmirabal.appstoreexample.R;
+import com.jsmirabal.appstoreexample.utility.Util;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -18,22 +19,32 @@ public class DetailActivity extends AppCompatActivity {
 
     @AfterViews
     void init (){
-        getSupportActionBar().setElevation(0);
+        changeTabletOrientation();
+        setupActionBar();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                Intent parentIntent = NavUtils.getParentActivityIntent(this);
-                parentIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                supportFinishAfterTransition();
-                startActivity(parentIntent);
-//                finish();
-
+                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void changeTabletOrientation() {
+        if (Util.isTablet(this)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    private void setupActionBar(){
+        getSupportActionBar().setElevation(0);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

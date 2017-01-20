@@ -67,7 +67,7 @@
                         android:fontFamily="sans-serif-light"
                         android:text="Apple Inc."
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey100" />
+                        android:textColor="@color/white" />
 
                     <TextView
                         android:id="@+id/app_release_date"
@@ -76,7 +76,7 @@
                         android:fontFamily="sans-serif-light"
                         android:text="October, 2016"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey100" />
+                        android:textColor="@color/white" />
 
 
                 </LinearLayout>
