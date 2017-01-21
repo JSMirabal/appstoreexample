@@ -4,6 +4,9 @@ package com.jsmirabal.appstoreexample.mvp;
  * Copyright (c) 2017. JSMirabal
  */
 
+import android.os.Bundle;
+
 public interface PresenterOpsToView {
-    void requestDataFromServer(String url);
+    void onRequestDataSuccess(Bundle data);
+    void onRequestDataError(Throwable e);
 }

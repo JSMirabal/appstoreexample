@@ -18,7 +18,7 @@ import com.jsmirabal.appstoreexample.R;
 import com.jsmirabal.appstoreexample.activity.DetailActivity_;
 import com.jsmirabal.appstoreexample.activity.MainActivity;
 import com.jsmirabal.appstoreexample.adapter.CategoryRecyclerAdapter;
-import com.jsmirabal.appstoreexample.mvp.ViewOpsToPresenter;
+import com.jsmirabal.appstoreexample.mvp.PresenterOpsToView;
 import com.jsmirabal.appstoreexample.presenter.MainPresenter;
 import com.jsmirabal.appstoreexample.utility.Util;
 
@@ -39,7 +39,7 @@ import static com.jsmirabal.appstoreexample.fragment.AppListFragment.APP_DATA_CA
  */
 
 @EFragment(R.layout.fragment_category)
-public class CategoryFragment extends Fragment implements ViewOpsToPresenter {
+public class CategoryFragment extends Fragment implements PresenterOpsToView {
 
     private MainActivity mActivity;
     private Context mContext;
@@ -47,7 +47,7 @@ public class CategoryFragment extends Fragment implements ViewOpsToPresenter {
     private CategoryRecyclerAdapter mAdapter;
     private MainPresenter mPresenter;
     private static final String LOG_TAG = CategoryFragment.class.getSimpleName();
-    private static final String URL = "https://itunes.apple.com/us/rss/topfreeapplications/limit=40/json";
+    private static final String URL = "https://itunes.apple.com/us/rss/topfreeapplications/limit=20/json";
 
     @ViewById(R.id.category_recycler_view)
     RecyclerView mCategoryRecyclerView;
@@ -79,7 +79,7 @@ public class CategoryFragment extends Fragment implements ViewOpsToPresenter {
     private void initMemberVars() {
         mContext = getActivity();
         mActivity = (MainActivity) mContext;
-        mPresenter = new MainPresenter(mContext, this);
+        mPresenter = new MainPresenter(this);
     }
 
     private void configRecyclerView() {

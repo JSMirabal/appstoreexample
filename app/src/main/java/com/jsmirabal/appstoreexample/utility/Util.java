@@ -5,15 +5,22 @@ package com.jsmirabal.appstoreexample.utility;
  */
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
 import com.jsmirabal.appstoreexample.R;
+import com.jsmirabal.appstoreexample.data.AppListData;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -22,6 +29,16 @@ import java.util.Map;
 import static com.jsmirabal.appstoreexample.data.AppListData.IMAGE_PATH_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.NAME_PARAM;
 import static com.jsmirabal.appstoreexample.data.AppListData.PRICE_PARAM;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_AUTHOR;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_CATEGORY;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_COPYRIGHT;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_ID;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_IMAGE_BLOB;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_IMAGE_PATH;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_NAME;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_PRICE;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_RELEASE_DATE;
+import static com.jsmirabal.appstoreexample.db.DbContract.AppEntry.COLUMN_APP_SUMMARY;
 
 public class Util {
 
@@ -121,5 +138,57 @@ public class Util {
         data.getBundle(PRICE_PARAM).getStringArrayList(category).remove(position);
         data.getBundle(IMAGE_PATH_PARAM).getStringArrayList(category).remove(position);
         return data;
+    }
+
+    public static ArrayList<String> getListFromCategory(Bundle data, String field, String category) {
+        return data.getBundle(field).getStringArrayList(category);
+    }
+
+    public static ArrayList<byte[]> getByteImageList(ArrayList<String> imagePathList, Context context) {
+        ArrayList<byte[]> byteImageList = new ArrayList<>();
+        for (String imagePath : imagePathList) {
+            if (!imagePath.equals("")) {
+                try {
+                    Bitmap bitmap = Picasso.with(context).load(imagePath).get();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byteImageList.add(stream.toByteArray());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return byteImageList;
+    }
+
+    public static ContentValues[] buildAppListContentValues(Context context, AppListData appListData) {
+        ArrayList<String> categoryList = appListData.getCategoryList();
+        ArrayList<String> nameList = appListData.getNameList();
+        ArrayList<String> authorList = appListData.getAuthorList();
+        ArrayList<String> idList = appListData.getIdList();
+        ArrayList<String> imagePathList = appListData.getImagePathList();
+        ArrayList<String> summaryList = appListData.getSummaryList();
+        ArrayList<String> priceList = appListData.getPriceList();
+        ArrayList<String> copyrightList = appListData.getCopyrightList();
+        ArrayList<String> releaseDateList = appListData.getReleaseDateList();
+        ArrayList<byte[]> imageBlobList = getByteImageList(imagePathList, context);
+
+        ContentValues[] arrayContentValues = new ContentValues[nameList.size()];
+        ContentValues contentValues;
+        for (int j = 0; j < nameList.size(); j++) {
+            contentValues = new ContentValues();
+            contentValues.put(COLUMN_APP_NAME, nameList.get(j));
+            contentValues.put(COLUMN_APP_CATEGORY, categoryList.get(j));
+            contentValues.put(COLUMN_APP_AUTHOR, authorList.get(j));
+            contentValues.put(COLUMN_APP_ID, idList.get(j));
+            contentValues.put(COLUMN_APP_IMAGE_PATH, imagePathList.get(j));
+            contentValues.put(COLUMN_APP_SUMMARY, summaryList.get(j));
+            contentValues.put(COLUMN_APP_PRICE, priceList.get(j));
+            contentValues.put(COLUMN_APP_COPYRIGHT, copyrightList.get(j));
+            contentValues.put(COLUMN_APP_RELEASE_DATE, releaseDateList.get(j));
+            contentValues.put(COLUMN_APP_IMAGE_BLOB, imageBlobList.get(j));
+            arrayContentValues[j] = contentValues;
+        }
+        return arrayContentValues;
     }
 }

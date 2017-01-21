@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
 /*
  * Copyright (c) 2017. JSMirabal
  */
@@ -23,13 +24,24 @@ public class AppListData {
     private Bundle priceBundle;
     private Bundle copyrightBundle;
     private Bundle releaseDateBundle;
-    private ArrayList<String> categoryList;
     private Bundle appDataBundle;
+
+    private ArrayList<String> filteredCategoryList;
+    private ArrayList<String> categoryList;
+    private ArrayList<String> nameList;
+    private ArrayList<String> authorList;
+    private ArrayList<String> imagePathList;
+    private ArrayList<String> idList;
+    private ArrayList<String> summaryList;
+    private ArrayList<String> priceList;
+    private ArrayList<String> copyrightList;
+    private ArrayList<String> releaseDateList;
 
     public static final String ID_PARAM = "im:id";
     public static final String NAME_PARAM = "im:name";
     public static final String AUTHOR_PARAM = "im:artist";
     public static final String IMAGE_PATH_PARAM = "im:image";
+    public static final String IMAGE_BLOB_PARAM = "image_blob";
     public static final String CATEGORY_PARAM = "category";
     public static final String SUMMARY_PARAM = "summary";
     public static final String PRICE_PARAM = "im:price";
@@ -49,7 +61,7 @@ public class AppListData {
 
         JSONArray entry = json.getJSONObject("feed").getJSONArray("entry");
 
-        fillCategoryList(entry);
+        fillFilteredCategoryList(entry);
         fillNameList(entry);
         fillAuthorList(entry);
         fillIdList(entry);
@@ -67,27 +79,48 @@ public class AppListData {
         nameBundle = new Bundle();
         authorBundle = new Bundle();
         imagePathBundle = new Bundle();
-        categoryList = new ArrayList<>();
         summaryBundle = new Bundle();
         priceBundle = new Bundle();
         copyrightBundle = new Bundle();
         releaseDateBundle = new Bundle();
         appDataBundle = new Bundle();
+
+        nameList = new ArrayList<>();
+        filteredCategoryList = new ArrayList<>();
+        categoryList = new ArrayList<>();
+        authorList = new ArrayList<>();
+        imagePathList = new ArrayList<>();
+        idList = new ArrayList<>();
+        summaryList = new ArrayList<>();
+        priceList = new ArrayList<>();
+        copyrightList = new ArrayList<>();
+        releaseDateList = new ArrayList<>();
     }
 
-    private void fillCategoryList(JSONArray entry) throws JSONException {
+    private void fillFilteredCategoryList(JSONArray entry) throws JSONException {
         Set<String> categoryList = new HashSet<>();
         for (int j = 0; j < entry.length(); j++) {
             categoryList.add(getCategoryFromJson(entry, j));
+            this.categoryList.add(getCategoryFromJson(entry, j));
         }
-        this.categoryList.addAll(categoryList);
+        this.filteredCategoryList.addAll(categoryList);
     }
 
     private void fillIdList(JSONArray entry) throws JSONException {
         String category, id;
         ArrayList<String> idList;
+
+        // Fill every id
+        for (int j = 0; j < entry.length(); j++) {
+            id = entry.getJSONObject(j)
+                    .getJSONObject("id")
+                    .getJSONObject(GENERIC_ATTRIBUTES_PARAM)
+                    .getString(ID_PARAM);
+            this.idList.add(id);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             idList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -95,8 +128,9 @@ public class AppListData {
                         .getJSONObject("id")
                         .getJSONObject(GENERIC_ATTRIBUTES_PARAM)
                         .getString(ID_PARAM);
+
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     idList.add(id); // Add an id to the list
                 }
             }// for j
@@ -108,8 +142,17 @@ public class AppListData {
     private void fillNameList(JSONArray entry) throws JSONException {
         String category, name;
         ArrayList<String> nameList;
+
+        // fill every name
+        for (int j = 0; j < entry.length(); j++) {
+            name = entry.getJSONObject(j)
+                    .getJSONObject(NAME_PARAM)
+                    .getString(GENERIC_LABEL_PARAM);
+            this.nameList.add(name);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             nameList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -117,7 +160,7 @@ public class AppListData {
                         .getJSONObject(NAME_PARAM)
                         .getString(GENERIC_LABEL_PARAM);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     nameList.add(name); // Add a name to the list
                 }
             }// for j
@@ -129,8 +172,17 @@ public class AppListData {
     private void fillAuthorList(JSONArray entry) throws JSONException {
         String category, author;
         ArrayList<String> authorList;
+
+        // fill every author
+        for (int j = 0; j < entry.length(); j++) {
+            author = entry.getJSONObject(j)
+                    .getJSONObject(AUTHOR_PARAM)
+                    .getString(GENERIC_LABEL_PARAM);
+            this.authorList.add(author);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             authorList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -138,7 +190,7 @@ public class AppListData {
                         .getJSONObject(AUTHOR_PARAM)
                         .getString(GENERIC_LABEL_PARAM);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     authorList.add(author); // Add a author to the list
                 }
             }// for j
@@ -150,8 +202,18 @@ public class AppListData {
     private void fillImagePathList(JSONArray entry) throws JSONException {
         String category, imagePath;
         ArrayList<String> imagePathList;
+
+        // fill ever imagePath
+        for (int j = 0; j < entry.length(); j++) {
+            imagePath = entry.getJSONObject(j)
+                    .getJSONArray(IMAGE_PATH_PARAM)
+                    .getJSONObject(IMAGE_100P)
+                    .getString(GENERIC_LABEL_PARAM);
+            this.imagePathList.add(imagePath);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             imagePathList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -160,7 +222,7 @@ public class AppListData {
                         .getJSONObject(IMAGE_100P)
                         .getString(GENERIC_LABEL_PARAM);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     imagePathList.add(imagePath); // Add a imagePath to the list
                 }
             }// for j
@@ -172,8 +234,17 @@ public class AppListData {
     private void fillSummaryList(JSONArray entry) throws JSONException {
         String category, summary;
         ArrayList<String> summaryList;
+
+        // fill every summary
+        for (int j = 0; j < entry.length(); j++) {
+            summary = entry.getJSONObject(j)
+                    .getJSONObject(SUMMARY_PARAM)
+                    .getString(GENERIC_LABEL_PARAM);
+            this.summaryList.add(summary);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             summaryList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -181,7 +252,7 @@ public class AppListData {
                         .getJSONObject(SUMMARY_PARAM)
                         .getString(GENERIC_LABEL_PARAM);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     summaryList.add(summary); // Add a summary to the list
                 }
             }// for j
@@ -193,17 +264,26 @@ public class AppListData {
     private void fillPriceList(JSONArray entry) throws JSONException {
         String category, price;
         ArrayList<String> priceList;
+
+        for (int j = 0; j < entry.length(); j++) {
+            price = entry.getJSONObject(j)
+                    .getJSONObject(PRICE_PARAM)
+                    .getJSONObject(GENERIC_ATTRIBUTES_PARAM)
+                    .getString(AMOUNT).substring(0, 3);
+            this.priceList.add(price);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             priceList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
                 price = entry.getJSONObject(j)
                         .getJSONObject(PRICE_PARAM)
                         .getJSONObject(GENERIC_ATTRIBUTES_PARAM)
-                        .getString(AMOUNT).substring(0,3);
+                        .getString(AMOUNT).substring(0, 3);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     priceList.add(price); // Add a price to the list
                 }
             }// for j
@@ -215,8 +295,16 @@ public class AppListData {
     private void fillCopyrightList(JSONArray entry) throws JSONException {
         String category, copyright;
         ArrayList<String> copyrightList;
+
+        for (int j = 0; j < entry.length(); j++) {
+            copyright = entry.getJSONObject(j)
+                    .getJSONObject(COPYRIGHT_PARAM)
+                    .getString(GENERIC_LABEL_PARAM);
+            this.copyrightList.add(copyright);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             copyrightList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -224,7 +312,7 @@ public class AppListData {
                         .getJSONObject(COPYRIGHT_PARAM)
                         .getString(GENERIC_LABEL_PARAM);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     copyrightList.add(copyright); // Add a copyright to the list
                 }
             }// for j
@@ -236,8 +324,15 @@ public class AppListData {
     private void fillReleaseDateList(JSONArray entry) throws JSONException {
         String category, releaseDate;
         ArrayList<String> releaseDateList;
+        for (int j = 0; j < entry.length(); j++) {
+            releaseDate = entry.getJSONObject(j)
+                    .getJSONObject(RELEASE_DATE_PARAM)
+                    .getString(GENERIC_LABEL_PARAM).substring(0, 7);
+            this.releaseDateList.add(releaseDate);
+        }
+
         // For each filtered category
-        for (String categorySaved : categoryList) {
+        for (String categorySaved : filteredCategoryList) {
             releaseDateList = new ArrayList<>();
             for (int j = 0; j < entry.length(); j++) {
                 category = getCategoryFromJson(entry, j);
@@ -245,7 +340,7 @@ public class AppListData {
                         .getJSONObject(RELEASE_DATE_PARAM)
                         .getString(GENERIC_LABEL_PARAM).substring(0, 7);
                 // If we are in the same category
-                if (categorySaved.equals(category)){
+                if (categorySaved.equals(category)) {
                     releaseDateList.add(releaseDate); // Add a releaseDate to the list
                 }
             }// for j
@@ -254,8 +349,8 @@ public class AppListData {
         }// foreach
     }// method
 
-    private void fillAppDataBundle(){
-        appDataBundle.putStringArrayList(CATEGORY_PARAM, categoryList);
+    private void fillAppDataBundle() {
+        appDataBundle.putStringArrayList(CATEGORY_PARAM, filteredCategoryList);
         appDataBundle.putBundle(NAME_PARAM, nameBundle);
         appDataBundle.putBundle(AUTHOR_PARAM, authorBundle);
         appDataBundle.putBundle(ID_PARAM, idBundle);
@@ -275,5 +370,45 @@ public class AppListData {
 
     public Bundle getAppDataBundle() {
         return appDataBundle;
+    }
+
+    public ArrayList<String> getFilteredCategoryList() {
+        return filteredCategoryList;
+    }
+
+    public ArrayList<String> getCategoryList() {
+        return categoryList;
+    }
+
+    public ArrayList<String> getNameList() {
+        return nameList;
+    }
+
+    public ArrayList<String> getAuthorList() {
+        return authorList;
+    }
+
+    public ArrayList<String> getImagePathList() {
+        return imagePathList;
+    }
+
+    public ArrayList<String> getIdList() {
+        return idList;
+    }
+
+    public ArrayList<String> getSummaryList() {
+        return summaryList;
+    }
+
+    public ArrayList<String> getPriceList() {
+        return priceList;
+    }
+
+    public ArrayList<String> getCopyrightList() {
+        return copyrightList;
+    }
+
+    public ArrayList<String> getReleaseDateList() {
+        return releaseDateList;
     }
 }
